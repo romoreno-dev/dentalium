@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="DentaliumApplication" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="envFilePaths">
+      <option value="$PROJECT_DIR$/environment.env" />
+    </option>
+    <option name="MAIN_CLASS_NAME" value="com.romoreno.dentalium.DentaliumApplication" />
+    <module name="dentalium" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
