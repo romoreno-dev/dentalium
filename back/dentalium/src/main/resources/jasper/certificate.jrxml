@@ -1,0 +1,21 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="certificate" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9e50e2dc-1a10-4d03-b589-abdebdaa8e5f">
+	<parameter name="CERTIFICATE_TEXT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["La clínica dental DENTALIUM, S.L. certifica que PACIENTE PACIENTE PACIENTE ha STATUS para TRATAMIENTO ODONTOLÓGICO el 13 DE DICIEMBRE de 2024 de 12:00 a 12:30."]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["En Málaga, a 13 de DICIEMBRE de 2024"]]></defaultValueExpression>
+	</parameter>
+	<query language="sql"><![CDATA[]]></query>
+	<title height="290" splitType="Stretch">
+		<element kind="textField" uuid="a5d3e1fd-799b-4a4f-869b-e133a21049f0" x="80" y="140" width="430" height="60">
+			<expression><![CDATA[$P{CERTIFICATE_TEXT}]]></expression>
+		</element>
+		<element kind="staticText" uuid="1ba5e0f5-e756-49fc-a64d-f70b12e01654" x="227" y="70" width="100" height="30" bold="true">
+			<text><![CDATA[CERTIFICADO]]></text>
+		</element>
+		<element kind="textField" uuid="dafc6fd4-2de4-4c2d-be77-2fa1ba8d089e" x="310" y="260" width="250" height="30">
+			<expression><![CDATA[$P{DATE}]]></expression>
+		</element>
+	</title>
+</jasperReport>
