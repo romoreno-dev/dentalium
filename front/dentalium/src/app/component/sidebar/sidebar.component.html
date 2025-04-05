@@ -1,0 +1,35 @@
+<div class="d-flex">
+  <div class="d-flex flex-column bg-dark text-white p-sm-4 vh-100">
+
+    <div class="d-none d-sm-flex align-items-center gap-3">
+      <img src="dentalium_no_title.svg" width="32" height="32" alt="Dentalium icon">
+      <h4 class="mb-0">Dentalium</h4>
+    </div>
+    <hr class="d-none d-sm-block">
+
+    <ul class="nav nav-pills flex-column">
+      @for (item of menuItems; track item.route) {
+        <li class="nav-item">
+          <a class="nav-link text-white"
+             [routerLink]="[item.route]"
+             routerLinkActive="active"><i [ngClass]="item.icon" class="pe-sm-4"></i><span
+            class="d-none d-sm-inline">{{ item.name }}</span></a>
+        </li>
+      }
+    </ul>
+
+    <div class="mt-auto">
+      <hr>
+      <div class="dropdown d-flex justify-content-center">
+        <a href="#" class="text-white text-decoration-none dropdown-toggle"
+           data-bs-toggle="dropdown" aria-expanded="false">
+          <span class="d-none d-sm-inline p-sm-2 fw-bold">{{ user }}</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+          <li><a class="dropdown-item" (click)="logout()" style="cursor: pointer;">Cerrar sesión</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<!--<router-outlet></router-outlet>-->
