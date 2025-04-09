@@ -1,0 +1,98 @@
+<div class="card p-2 mt-2 mb-2 d-flex flex-row justify-content-between align-items-center">
+  <i class="bi bi-arrow-left ms-2" style="cursor: pointer" (click)="toPreviousDay()"></i>
+  <span class="fw-bold fs-4">{{ dateString }}
+    <i class="bi bi-pen" style="cursor:pointer" (click)="createAppointmentSwal()"></i>
+</span>
+  <a class="bi bi-arrow-right me-2 text-decoration-none" style="cursor: pointer" (click)="toNextDay()"><i></i></a>
+</div>
+
+@for (appointment of appointments; track appointment.id) {
+
+  <div id="appointment" class="card p-4 mb-2">
+    <div class="d-flex flex-column flex-md-row mb-2">
+      <div class="flex-grow-1 m-2">
+        <h4 class="m-0 fs-5 fs-md-5"> {{ appointment.initDate | date: 'HH:mm' }}
+          - {{ appointment.endDate | date: 'HH:mm' }}</h4>
+      </div>
+      <div class="d-flex m-1">
+        <div class="btn-group">
+          <div class="card rounded-3" data-bs-toggle="dropdown" style="border-color:grey">
+            <span class="p-2 fw-bold fs-6 fs-md-5 bg-success-subtle bg-" [ngClass]="{'bg-success-subtle' : isGreen(appointment.status.id),
+            'bg-warning-subtle' : isYellow(appointment.status.id),
+            'bg-danger-subtle' : isRed(appointment.status.id),
+            'bg-light' : isGray(appointment.status.id),
+            'bg-info' : isBlue(appointment.status.id),
+            }">
+            {{ appointment.status.description }}</span></div>
+          <ul class="dropdown-menu">
+            @for (item of menuItems; track item.value) {
+              <li><a class="dropdown-item" (click)="modifyStatus(appointment, item.value)">{{ item.description }}</a>
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex flex-column">
+
+      <div class="d-flex flex-row justify-content-between align-items-center">
+        <div class="d-flex flex-column justify-content-start">
+          <p class="m-0"><span class="fw-bold">Paciente:</span> <a class="text-decoration-none ms-2" style="cursor:pointer"
+                                                                   (click)="goToPatientsDetails(appointment.patient.id)">{{ appointment.patient.name }}</a>
+          </p>
+        </div>
+        <div class="d-flex flex-row justify-content-end">
+          @if (!'4,5'.includes(appointment.status.id)) {
+            <i class="bi bi-download m-2" style="cursor:pointer"
+               (click)="downloadAppointmentTextDialog(appointment)"></i>
+          }
+          <i class="bi bi-sticky m-2" data-bs-toggle="modal"
+             data-bs-target="#updateObservationsModal" style="cursor:pointer"
+             (click)="openEditAppointmentModal(appointment)"></i>
+          <i class="bi bi-trash m-2" style="cursor:pointer" (click)="deleteAppointment(appointment)"></i>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="d-flex flex-grow-3 p-1">
+      @if (appointment.observations) {
+        <div class="accordion" id="accordion">
+          <div class="accordion-item">
+            <button class="m-0 p-2 accordion-header rounded-2" style="background-color: white"
+                    data-bs-toggle="collapse" [attr.data-bs-target]="'#observationsText' + appointment.id"
+                    aria-expanded="false" [attr.aria-controls]="'observationsText' + appointment.id">><span
+              class="fw-bold">Observaciones:</span></button>
+            <div [id]="'observationsText' + appointment.id"
+                 class="accordion-collapse collapse  headingOne rounded-3 p-2"
+                 style="background-color:#dce8f1; white-space:pre-wrap;">{{ appointment.observations }}
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+}
+<div class="modal fade" id="updateObservationsModal" tabindex="-1">
+  <div class="modal-dialog">
+    <form [formGroup]="form" (ngSubmit)="saveChanges()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Incluir observaciones</h5>
+          <button id="close-modal-tratamientos" type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="m-3">
+          <label class="form-label fw-bold">Observaciones</label>
+          <textarea id="observations" class="form-control" formControlName="observations" style="resize:none"
+                    rows="6"></textarea>
+        </div>
+        <div class="m-2 d-flex flex-row align-items-center justify-content-center gap-4">
+          <button type="submit" class="btn btn-primary">Guardar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</div>

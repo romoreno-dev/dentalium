@@ -1,0 +1,107 @@
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link" [ngClass]="{'active fw-bold' : currentAppointment}" aria-current="page" style="cursor: pointer"
+       (click)="tabAppointmentChange(true)">Próximas</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" [ngClass]="{'active fw-bold' : !currentAppointment}" style="cursor: pointer"
+       (click)="tabAppointmentChange(false)">Anteriores</a>
+  </li>
+</ul>
+
+@for (appointment of appointments; track appointment.id) {
+  <div id="appointment" class="card p-4 mb-2">
+    <div class="d-flex flex-column flex-md-row mb-2">
+      <div class="flex-grow-1 m-2">
+        <h4 class="m-0 fs-5 fs-md-5"> {{ appointment.initDate | date: 'd/MM/YYYY' }}
+          - {{ appointment.initDate | date: 'HH:mm' }}</h4>
+      </div>
+      <div class="d-flex m-1">
+        <div class="btn-group">
+          <div class="card rounded-3" data-bs-toggle="dropdown" style="border-color:grey">
+            <span class="p-2 fw-bold fs-6 fs-md-5">{{ appointment.status.description }}</span></div>
+          @if (role.includes('ROLE_DENTIST')) {
+            <ul class="dropdown-menu">
+              @for (item of menuItems; track item.value) {
+                <li><a class="dropdown-item" (click)="modifyStatus(appointment, item.value)">{{ item.description }}</a>
+                </li>
+              }
+            </ul>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex flex-column">
+
+      <div class="d-flex flex-row justify-content-between align-items-center">
+        <div class="d-flex flex-column align-content-between justify-content-start">
+          <p class="m-0"><span class="fw-bold">Hora fin:</span> {{ appointment.endDate | date:'HH:mm' }}</p>
+          <p class="m-0"><span class="fw-bold">Doctor:</span> {{ appointment.doctor.name }}</p>
+        </div>
+        <div class="d-flex align-items-end justify-content-end">
+          @if (role.includes('ROLE_PATIENT')) {
+            @if (appointment.status.id == '1') {
+              <button class="btn btn-success me-2"
+                      (click)="confirmAppointment(appointment)">Confirmar cita
+              </button>
+            }
+            @if ('1,2'.includes(appointment.status.id)) {
+              <button class="btn btn-danger me-2" (click)="callOffAppointment(appointment)">Rechazar cita</button>
+            }
+            @if (!'4,5'.includes(appointment.status.id)) {
+              <button class="btn btn-info me-2"
+                      (click)="downloadAppointmentTextDialog(appointment)">Emitir justificante
+              </button>
+            }
+          }
+          @if (role.includes('ROLE_DENTIST')) {
+              <i class="bi bi-sticky m-2" data-bs-toggle="modal"
+                 data-bs-target="#updateObservationsModal"
+                 (click)="openEditAppointmentModal(appointment)"></i>
+              <i class="bi bi-trash m-2" style="cursor:pointer" (click)="deleteAppointment(appointment)"></i>
+          }
+        </div>
+      </div>
+
+      <div class="d-flex flex-grow-3 p-1">
+        @if (appointment.observations) {
+          <div class="accordion" id="accordion">
+            <div class="accordion-item">
+              <button class="m-0 p-2 accordion-header rounded-2" style="background-color: white"
+                      data-bs-toggle="collapse" [attr.data-bs-target]="'#observationsText' + appointment.id"
+                      aria-expanded="false" [attr.aria-controls]="'observationsText' + appointment.id">><span
+                class="fw-bold">Observaciones:</span></button>
+              <div [id]="'observationsText' + appointment.id"
+                   class="accordion-collapse collapse  headingOne rounded-3 p-2"
+                   style="background-color:#dce8f1; white-space:pre-wrap;">{{ appointment.observations }}
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}
+<div class="modal fade" id="updateObservationsModal" tabindex="-1">
+  <div class="modal-dialog">
+    <form [formGroup]="form" (ngSubmit)="saveChanges()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Incluir observaciones</h5>
+          <button id="close-modal-tratamientos" type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="m-3">
+          <label class="form-label fw-bold">Observaciones</label>
+          <textarea id="observations" class="form-control" formControlName="observations" style="resize:none"
+                    rows="6"></textarea>
+        </div>
+        <div class="m-2 d-flex flex-row align-items-center justify-content-center gap-4">
+          <button type="submit" class="btn btn-primary">Guardar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</div>
