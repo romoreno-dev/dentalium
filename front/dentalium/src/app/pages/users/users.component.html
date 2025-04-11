@@ -1,0 +1,241 @@
+<section class="container-fluid p-4 min-vh-100 background_container_color">
+  <div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-primary m-2 ms-3" data-bs-toggle="modal" data-bs-target="#newUserModal">
+      Nuevo usuario
+    </button>
+  </div>
+
+
+  <h4 class="m2">Pacientes</h4>
+  @if (patients.length > 0) {
+    <div class="table-responsive">
+      <table class="table table-striped table-light table">
+        <thead>
+        <tr>
+          <th></th>
+          <th>Id</th>
+          <th>Identificacion</th>
+          <th>Apellidos y nombre</th>
+          <th>Usuario</th>
+          <th>Email</th>
+          <th>Teléfono</th>
+          <th>Dirección</th>
+          <th>Dentista asociado</th>
+          <th>Activo</th>
+        </thead>
+        <tbody>
+          @for (patient of patients; track $index) {
+            <tr>
+              <td style="white-space: nowrap"><i class="bi bi-trash ms-3" style="cursor: pointer"
+                                                 (click)="deleteUser(patient.id)"></i>
+                <i class="bi bi-credit-card ms-3" style="cursor: pointer" tooltip="Enviar contraseña al correo"
+                   (click)="sendPassword(patient.email)"></i>
+                <i class="bi bi-person-workspace ms-3" style="cursor: pointer" tooltip="Asignación de dentista"
+                   data-bs-toggle="modal" data-bs-target="#changeAssigmentModal"
+                   (click)="openAssigmentModal(patient)"></i>
+              </td>
+              <td>{{ patient.id }}</td>
+              <td>{{ patient.identification }}</td>
+              <td>{{ patient.firstSurname.toUpperCase() }} {{ patient.secondSurname.toUpperCase() }}
+                , {{ patient.name.toUpperCase() }}
+              </td>
+              <td>{{ patient.user }}</td>
+              <td>{{ patient.email }}</td>
+              <td>{{ patient.phone }}</td>
+              <td>{{ patient.address }} - {{ patient.municipality }} ({{ patient.province }})
+                C.P.: {{ patient.postalCode }}
+              </td>
+              <td>{{ patient.userReference?.name }}</td>
+              <td><input class="form-check-input" type="checkbox" [(ngModel)]="patient.active"
+                         (ngModelChange)="onActiveChange($event, patient.id)"></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+  @if (patients.length == 0 && !loading) {
+    <div class="alert alert-info"> No existen pacientes registrados</div>
+  }
+
+  <h4 class="m2">Dentistas</h4>
+
+  @if (dentists.length > 0) {
+    <div class="table-responsive">
+      <table class="table table-striped table-light table">
+        <thead>
+        <tr>
+          <th></th>
+          <th>Id</th>
+          <th>Número de colegiado</th>
+          <th>Apellidos y nombre</th>
+          <th>Usuario</th>
+          <th>Email</th>
+          <th>Teléfono</th>
+          <th>Activo</th>
+        </thead>
+        <tbody>
+          @for (dentist of dentists; track $index) {
+            <tr style="white-space: nowrap">
+              <td><i class="bi bi-trash ms-3" style="cursor: pointer" (click)="deleteUser(dentist.id)"></i>
+                <i class="bi bi-credit-card ms-3" style="cursor: pointer" tooltip="Enviar contraseña al correo"
+                   (click)="sendPassword(dentist.email)"></i>
+              </td>
+              <td>{{ dentist.id }}</td>
+              <td>{{ dentist.identification }}</td>
+              <td>{{ dentist.firstSurname.toUpperCase() }} {{ dentist.secondSurname.toUpperCase() }}
+                , {{ dentist.name.toUpperCase() }}
+              </td>
+              <td>{{ dentist.user }}</td>
+              <td>{{ dentist.email }}</td>
+              <td>{{ dentist.phone }}</td>
+              <td><input class="form-check-input" type="checkbox" [(ngModel)]="dentist.active"
+                         (ngModelChange)="onActiveChange($event, dentist.id)"></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+  @if (dentists.length == 0 && !loading) {
+    <div class="alert alert-info"> No existen dentistas registrados</div>
+  }
+
+  <div class="modal fade" id="changeAssigmentModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Cambiar la asignación de dentista</h5>
+          <button id="closeAssigmentButton" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                  (click)="cleanAssigmentModal()"></button>
+        </div>
+        <form (ngSubmit)="assignDentist()" enctype="multipart/form-data">
+          <div class="modal-body">
+            <div class="form-group mb-3">
+              <label for="dropdown">Dentista asignado</label>
+              <select class="form-select" id="dropdown" [(ngModel)]="dentistSelected" name="studyType" required>
+                @for (item of dentists; track item.identification) {
+                  <option class="dropdown-item"
+                          [value]="item.identification">{{ item.firstSurname.toUpperCase() }} {{ item.secondSurname.toUpperCase() }}
+                    , {{ item.name.toUpperCase() }}
+                  </option>
+                }
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Asignar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade" id="newUserModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Nuevo usuario</h5>
+          <button id="close-new-user-modal" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                  (click)="onCloseNewUserModal()"></button>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="newUser()">
+          <div class="modal-body">
+
+            <div class="d-flex d-row justify-content-center mb-3">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" formControlName="role" id="rolePatient"
+                       value="ROLE_PATIENT">
+                <label class="form-check-label fw-bold" for="rolePatient">Paciente</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input fw-bold" type="radio" formControlName="role" id="roleDoctor"
+                       value="ROLE_DENTIST">
+                <label class="form-check-label fw-bold" for="roleDoctor">Dentista</label>
+              </div>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="user" class="form-label fw-bold">Usuario</label>
+                <input id="user" type="text" class="form-control" formControlName="user">
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-bold">Identificación</label>
+                @if (form.get('role')?.value === 'ROLE_PATIENT') {
+                  <input id="identification-patient" type="text" max="9" class="form-control" formControlName="identification">
+                }
+                @if (form.get('role')?.value === 'ROLE_DENTIST') {
+                  <input id="identification-dentist" type="number" max="9" class="form-control" formControlName="identification">
+                }
+              </div>
+
+              <div class="col-md-6">
+                <label for="name" class="form-label fw-bold">Nombre</label>
+                <input id="name" type="text" class="form-control" formControlName="name">
+              </div>
+
+              <div class="col-md-6">
+                <label for="firstSurname" class="form-label fw-bold">Primer apellido</label>
+                <input id="firstSurname" type="text" class="form-control" formControlName="firstSurname">
+              </div>
+
+              <div class="col-md-6">
+                <label for="secondSurname" class="form-label fw-bold">Segundo apellido</label>
+                <input id="secondSurname" type="text" class="form-control" formControlName="secondSurname">
+              </div>
+
+              <div class="col-md-6">
+                <label for="phone" class="form-label fw-bold">Teléfono</label>
+                <input id="phone" type="number" class="form-control" formControlName="phone">
+              </div>
+
+              <div class="col-md-6">
+                <label for="email" class="form-label fw-bold">Email</label>
+                <input id="email" type="text" class="form-control" formControlName="email">
+              </div>
+            </div>
+
+            @if (form.get('role')?.value === 'ROLE_PATIENT') {
+              <div class="row g-3 mt-3">
+                <div class="col-md-6">
+                  <label for="address" class="form-label fw-bold">Dirección</label>
+                  <input id="address" type="text" class="form-control" formControlName="address">
+                </div>
+
+                <div class="col-md-4">
+                  <label for="postalCode" class="form-label fw-bold">Código postal</label>
+                  <input id="postalCode" type="number" class="form-control" formControlName="postalCode">
+                </div>
+
+                <div class="col-md-4">
+                  <label for="municipality" class="form-label fw-bold">Municipio</label>
+                  <input id="municipality" type="text" class="form-control" formControlName="municipality">
+                </div>
+
+                <div class="col-md-4">
+                  <label for="province" class="form-label fw-bold">Provincia</label>
+                  <input id="province" type="text" class="form-control" formControlName="province">
+                </div>
+
+              </div>
+
+            }
+          </div>
+
+          <div class="modal-footer d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+</section>
+

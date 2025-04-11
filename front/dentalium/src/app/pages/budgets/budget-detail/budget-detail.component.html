@@ -1,0 +1,183 @@
+<section class="container-fluid p-4 min-vh-100" style="background-color: #dae3f4;">
+  <h3 class="p-2">Presupuesto - {{ budget.date | date: 'd/MM/YYYY' }}</h3>
+
+  <div class="card col-3 mb-4 mx-auto">
+    <div class="card-header">
+      Detalles
+    </div>
+    <div class="card-body mt-2 mb-2 d-flex flex-column">
+      <h5 class="card-title d-flex fw-bold fs-6 fs-sm-5 justify-content-center">Presupuesto #{{ budget.id }}
+        ({{ budget.date | date: 'd/MM/YYYY' }})
+        <br> <br> {{ budget.patientName }}
+      </h5>
+
+      <div class="btn-group mt-2 mb-2 justify-content-center">
+        <div class="card rounded-3" data-bs-toggle="dropdown" style="border-color:grey">
+          <span class="p-2 fw-bold fs-6 fs-md-5">{{ budget.status?.description }}</span></div>
+        @if (role.includes('ROLE_DENTIST')) {
+          <ul class="dropdown-menu">
+            @for (item of menuItems; track item.value) {
+              <li><a class="dropdown-item" (click)="modifyStatus(budget, item.value)">{{ item.description }}</a>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <a style="cursor:pointer" class="btn btn-primary" (click)="downloadBudget(budget)">
+          <i class="bi bi-download"></i> Descargar
+        </a>
+      </div>
+
+    </div>
+  </div>
+  @if (role.includes('ROLE_DENTIST')) {
+    <button type="button" class="btn btn-primary m-2 ms-3" data-bs-toggle="modal" data-bs-target="#addBudgetLineModal">
+      <i class="bi bi-plus-lg"></i>
+    </button>
+  }
+
+  @if (budget.budgetLine.length > 0) {
+    @if (role.includes('ROLE_DENTIST')) {
+      <div class="table-responsive">
+        <table class="table table-striped table-light table">
+          <thead>
+          <tr>
+            <th></th>
+            <th>Tratamiento</th>
+            <th>Piezas</th>
+            <th>Cantidad</th>
+            <th>Precio unitario</th>
+            <th>Precio tratamiento</th>
+            <th>% Dto.</th>
+            <th>Total tratamiento</th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (budgetLine of budget.budgetLine; track $index) {
+              <tr>
+                <td><i class="bi bi-trash ms-3" style="cursor: pointer"
+                       (click)="deleteTreatment(budget, budgetLine)"></i></td>
+                <td>{{ budgetLine.treatmentName }}</td>
+                <td>{{ budgetLine.teeth }}</td>
+                <td>{{ budgetLine.quantity }}</td>
+                <td>{{ budgetLine.unitPrice }}</td>
+                <td>{{ budgetLine.treatmentPrice }}</td>
+                <td>{{ budgetLine.discount }}</td>
+                <td>{{ budgetLine.totalPrice }}</td>
+              </tr>
+            }
+          </tbody>
+          <tfoot>
+          <tr>
+            <td colspan="7" class="text-end fw-bold">Total:</td>
+            <td class="fw-bold">{{ budget.totalPrice }}</td>
+          </tr>
+          </tfoot>
+        </table>
+      </div>
+    } @else if (role.includes('ROLE_PATIENT')) {
+      <div class="table-responsive">
+        <table class="table table-striped table-light table">
+          <thead>
+          <tr>
+            <th>Tratamiento</th>
+            <th>Piezas</th>
+            <th>Cantidad</th>
+            <th>Precio unitario</th>
+            <th>Precio tratamiento</th>
+            <th>% Dto.</th>
+            <th>Total tratamiento</th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (budgetLine of budget.budgetLine; track $index) {
+              <tr>
+                <td>{{ budgetLine.treatmentName }}</td>
+                <td>{{ budgetLine.teeth }}</td>
+                <td>{{ budgetLine.quantity }}</td>
+                <td>{{ budgetLine.unitPrice }}</td>
+                <td>{{ budgetLine.treatmentPrice }}</td>
+                <td>{{ budgetLine.discount }}</td>
+                <td>{{ budgetLine.totalPrice }}</td>
+              </tr>
+            }
+          </tbody>
+          <tfoot>
+          <tr>
+            <td colspan="6" class="text-end fw-bold">Total:</td>
+            <td class="fw-bold">{{ budget.totalPrice }}</td>
+          </tr>
+          </tfoot>
+        </table>
+      </div>
+    }
+
+  }
+
+  @if (budget.budgetLine.length == 0 && !loading) {
+    <div class="alert alert-info"> No hay tratamientos pautados en el presupuesto</div>
+  }
+
+  <div class="modal fade" id="addBudgetLineModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <form>
+        <form [formGroup]="form" (ngSubmit)="addBudgetLine()">
+          <div class="modal-content" style="width: 700px">
+            <div class="modal-header">
+              <h5 class="modal-title">Incluir tratamiento</h5>
+              <button id="close-modal-budget-line" type="button" class="btn-close" data-bs-dismiss="modal" (click)="onCloseModal()"></button>
+            </div>
+
+
+            <div class="d-flex flex-row">
+
+              <div class="d-flex">
+                <app-teeth (selectToothEvent)="updateTeeth($event)"></app-teeth>
+              </div>
+
+              <div class="d-flex flex-column">
+
+                <div class="m-3">
+                  <label for="treatment" class="form-label fw-bold">Tratamiento</label>
+                  <select class="form-select" id="treatment" formControlName="treatmentId" required>
+                    @for (treatment of treatments; track treatment.id) {
+                      <option [value]="treatment.id">{{ treatment.name }} - {{ treatment.unitPrice }}€</option>
+                    }
+                  </select>
+                </div>
+                <div class="m-3">
+                  <label for="teeth" class="form-label fw-bold">Piezas</label>
+                  <input id="teeth" type="text" readonly class="form-control disabled" formControlName="teeth" style="cursor:none">
+                </div>
+                <div class="d-flex flex-row m-3 justify-content-between align-items-center">
+                  <div class="d-flex flex-column m-3 justify-content-between">
+                    <label for="quantity" class="form-label fw-bold">Cantidad</label>
+                    <input id="quantity" type="number" class="form-control" formControlName="quantity" min="1"
+                           max="40"
+                           step="1" required>
+                  </div>
+                  <div class="d-flex flex-column m-3 justify-content-between">
+                    <label for="discount" class="form-label fw-bold">Descuento (%)</label>
+                    <input id="discount" type="number" class="form-control" formControlName="discount" min="0"
+                           max="100" step="1" inputmode="numeric">
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+
+            <div class="m-2 d-flex flex-row align-items-center justify-content-center gap-4">
+              <button type="submit" class="btn btn-primary">Guardar</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+          </div>
+        </form>
+      </form>
+    </div>
+  </div>
+
+
+</section>

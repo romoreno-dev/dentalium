@@ -1,0 +1,15 @@
+<section class="container-fluid p-4 min-vh-100 background_container_color">
+
+  @if(role.includes('ROLE_PATIENT')) {
+    <h1 class="p-2">Citas</h1>
+
+    <appointment-tabs [patientId]="getUserId()"></appointment-tabs>
+
+  } @else if (role.includes('ROLE_DENTIST')) {
+    <scheduler-tabs [doctorId]="getUserId()"></scheduler-tabs>
+  } @else if (role.includes('ROLE_ADMIN')) {
+    <h3 class="p-2">Gestión de tratamientos</h3>
+    <app-treatments></app-treatments>
+  }
+
+</section>

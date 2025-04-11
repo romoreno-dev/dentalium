@@ -1,0 +1,107 @@
+<div class="container-fluid background_container_color vh-100 d-flex flex-column">
+
+  <div class="card p-2 mt-2 mb-2 d-flex" style="flex: 0 0 10%;">
+    <div class="row">
+      <div class="col-8">
+        <span
+          class="fw-bold">{{patient.firstSurname.toLocaleUpperCase()}} {{patient.secondSurname.toLocaleUpperCase()}}, {{patient.name.toLocaleUpperCase()}}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-8">
+        <span class="fw-bold me-2">Teléfono</span><span>{{ patient.phone }}</span>
+      </div>
+      <div class="col-4">
+        <span class="fw-bold me-2">Identificación</span><span>{{ patient.identification }}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-8">
+        <span class="fw-bold me-2">Dirección</span><span>{{ patient.address }} - {{ patient.municipality }}
+        ({{ patient.province }}) C.P.: {{ patient.postalCode }}</span>
+      </div>
+      <div class="col-4">
+        <span class="fw-bold me-2">Email</span><span>{{ patient.email }}</span>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="row flex-grow-1" style="overflow:hidden">
+    <div class="col-md-5">
+      <div class="card vh-100">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <span class="fw-bold">Citas</span>
+          <button class="btn btn-sm btn-light" (click)="saveAppointment()"><i class="bi bi-pen"></i></button>
+        </div>
+        <div class="card-body vh-100" style="overflow-y: auto;">
+          <appointment-tabs [patientId]="patientId"></appointment-tabs>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 p-0">
+      <div class="card vh-100">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <span class="fw-bold">Presupuestos</span>
+          <button class="btn btn-sm btn-light" (click)="createBudget()"><i
+            class="bi bi-plus-lg"></i></button>
+        </div>
+        <div class="card-body vh-100" style="overflow-y: auto;">
+          <budgets-tabs [patientId]="patientId"></budgets-tabs>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card vh-100">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <span class="fw-bold">Estudios médicos</span>
+          <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#uploadStudyModal"><i
+            class="bi bi-plus-lg"></i></button>
+        </div>
+        <div class="card-body vh-100" style="overflow-y: auto;">
+          <studies-tab [patientId]="patientId"></studies-tab>
+        </div>
+      </div>
+
+      @if (role.includes('ROLE_DENTIST')) {
+        <div class="modal fade" id="uploadStudyModal" tabindex="-1" aria-labelledby="uploadStudyModal"
+             aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Subir estudio médico</h5>
+                <button id="closeButton" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cleanBoth()"></button>
+              </div>
+              <form (ngSubmit)="uploadDocument()" enctype="multipart/form-data">
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <label for="uploadFileComponent" class="form-label">Estudio médico</label>
+                    <input type="file" class="form-control" id="uploadFileComponent" (change)="onFileChange($event)" required>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="dropdown">Tipo de estudio</label>
+                    <select class="form-select" id="dropdown" [(ngModel)]="selectedType" name="studyType" required>
+                      <option disabled selected>Seleccionar tipo de estudio</option>
+                      @for (item of menuOptions; track item.value) {
+                        <option class="dropdown-item" [value]="item.value">{{ item.description }}</option>
+                      }
+                    </select>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                  <button type="submit" class="btn btn-primary">Subir estudio</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+      }
+
+    </div>
+  </div>
+</div>

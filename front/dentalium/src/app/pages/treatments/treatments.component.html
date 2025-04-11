@@ -1,0 +1,68 @@
+<div class="d-flex justify-content-end">
+  <button type="button" class="btn btn-primary m-2 ms-3" data-bs-toggle="modal" data-bs-target="#addTreatmentModal">
+    <i class="bi bi-plus-lg"></i>
+  </button>
+</div>
+
+@if (treatments.length > 0) {
+  <div class="table-responsive">
+    <table class="table table-striped table-light table">
+      <thead>
+      <tr>
+        <th>Id</th>
+        <th>Nombre</th>
+        <th>Precio unitario</th>
+        <th>Activo</th>
+      </thead>
+      <tbody>
+        @for (treatment of treatments; track $index) {
+          <tr>
+            <td>{{ treatment.id }}</td>
+            <td>{{ treatment.name }}</td>
+            <td>{{ treatment.unitPrice | number:'1.2-2' }} €</td>
+            <td><input class="form-check-input" type="checkbox" [(ngModel)]="treatment.active"
+                       (ngModelChange)="onTreatmentChange($event, treatment)"></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}
+@if (treatments.length == 0 && !loading) {
+  <div class="alert alert-info"> No existen tratamientos en la clínica</div>
+}
+
+<div class="modal fade" id="addTreatmentModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered" style="max-width:600px;">
+    <div class="modal-content">
+      <form [formGroup]="form" (ngSubmit)="addTreatment()">
+        <div class="modal-header">
+          <h5 class="modal-title">Incluir tratamiento</h5>
+          <button id="close-modal-budget-line" type="button" class="btn-close" data-bs-dismiss="modal"
+                  (click)="onCloseModal()"></button>
+        </div>
+
+
+        <div class="d-flex flex-column">
+
+          <div class="m-3">
+            <label for="name" class="form-label fw-bold">Nombre</label>
+            <input id="name" class="form-control" formControlName="name">
+          </div>
+          <div class="d-flex flex-column m-3 justify-content-between">
+            <label for="unitPrice" class="form-label fw-bold">Precio Unitario (€)</label>
+            <input id="unitPrice" type="number" class="form-control" formControlName="unitPrice" inputmode="numeric">
+          </div>
+        </div>
+
+        <div class="m-2 d-flex flex-row align-items-center justify-content-center gap-4">
+          <button type="submit" class="btn btn-primary">Guardar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+

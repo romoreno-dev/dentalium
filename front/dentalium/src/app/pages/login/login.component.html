@@ -1,0 +1,36 @@
+<section class="vh-100 align-items-center justify-content-center background_container_color" style="background-color: #508bfc;">
+<!--  #508bfc-->
+  <div class="container d-flex flex-column justify-content-center align-items-center py-4">
+
+    <img class="img-fluid w-25 m-3" style="max-height:200px" src="dentalium_title.svg" alt="Dentalium Logo">
+
+    <div class="card p-4 shadow" style="width: 22rem; border-radius: 1rem">
+
+      <h3 class="text-center mb-2">Iniciar Sesión</h3>
+      <form (ngSubmit)="login()">
+
+        <div>
+          <p style="color:red">{{ message }}</p>
+        </div>
+
+        <div class="mb-4">
+          <input id="user" type="user" class="form-control" name="user" placeholder="Usuario" autocomplete="username" required [(ngModel)]="user">
+        </div>
+        <div class="mb-4">
+          <input id="password" [type]="passwordFieldType" class="form-control" name="password" placeholder="Contraseña" autocomplete="current-password" required [(ngModel)]="password">
+        </div>
+
+        <div class="form-check d-flex justify-content-start mb-4">
+          <input id="show-password" class="form-check-input me-2" type="checkbox" (change)="showPassword($event)"/>
+          <label class="form-check-label" for="show-password">Mostrar contraseña</label>
+        </div>
+
+        <div class="form-check d-flex justify-content-end mb-4">
+          <a class="text-decoration-none" style="color: blue; cursor:pointer" (click)="forgotPassword()">He olvidado mi contraseña</a>
+        </div>
+
+        <button id="access" type="submit" class="btn btn-primary">Acceder</button>
+      </form>
+    </div>
+  </div>
+</section>
