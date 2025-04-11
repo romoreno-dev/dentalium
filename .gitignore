@@ -1,7 +1,10 @@
 data/mysql
+
+# Evitar subir datos privados
 certificate.p12
 environment.env
 manual_desployment.txt
+.dcm
 
 ### Angular ###
 dist/
