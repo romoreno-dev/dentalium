@@ -1,0 +1,42 @@
+@startgantt
+
+printscale weekly
+
+Project starts 2025-02-27
+
+[  ] happens 2025-02-27
+
+' ANALISIS 5 dias
+'[Análisis (5 días)] starts 2025-02-27 and ends 2025-03-03 and is colored in #ADD8E6
+'[Análisis real (5 días)] starts 2025-02-27 and ends 2025-03-03 and is colored in #FFB6C1
+
+'[Envío de la propuesta] happens 2025-03-03
+
+2025-03-03 to 2025-03-05 is closed
+
+'[Aprobación de la propuesta] happens 2025-03-05
+
+' DISEÑO 15 dias vs 19 dias
+'[Diseño y Formación Angular (15 días)] starts 2025-03-05 and ends 2025-03-20 and is colored in #ADD8E6
+'[Diseño y Formación Angular real (19 días)] starts 2025-03-05 and ends 2025-03-24 and is colored in #FFB6C1
+
+'[Codificación (16 días)] starts 2025-03-20 and ends 2025-04-05 and is colored in #ADD8E6
+'[Codificación real (17 días)] starts 2025-03-24 and ends 2025-04-10 and is colored in #FFB6C1
+
+
+' CODIFICACION  16 dias vs 17 dias
+[Codificación Back (8 días)] starts 2025-03-20 and ends 2025-03-28 and is colored in #ADD8E6
+[Codificación Front (8 días)] starts 2025-03-28 and ends 2025-04-05 and is colored in #ADD8E6
+
+[Codificación Back real (6 días)] starts 2025-03-24 and ends 2025-03-30 and is colored in #FFB6C1
+[Codificación Front real (11 días)] starts 2025-04-01 and ends 2025-04-10 and is colored in #FFB6C1
+
+' PRUEBAS  15 dias vs 8 dias
+'[Pruebas (15 días)] starts 2025-04-01 and ends 2025-04-21 and is colored in #ADD8E6
+'[Pruebas real (8 días)] starts 2025-04-11 and ends 2025-04-24 and is colored in #FFB6C1
+
+2025-04-16 to 2025-04-20 is closed
+
+[ ] happens 2025-04-24
+
+@endgantt

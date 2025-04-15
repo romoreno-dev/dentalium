@@ -1,0 +1,24 @@
+@startuml
+
+left to right direction
+
+node "Cliente" {
+}
+
+node "dentalium-frontend (nginx:alpine)" {
+  artifact "Dentalium Frontend (Angular SPA)" as angular
+}
+
+node "dentalium-backend (openjdk:17)" {
+  artifact "Dentalium Spring Boot API" as spring
+}
+
+node "mysql" {
+  database "Dentalium BBDD" as data
+}
+
+Cliente --> angular : HTTP (:80)
+angular --> spring : HTTP/REST (:8080)
+spring --> data : JDBC (:3306)
+
+@enduml

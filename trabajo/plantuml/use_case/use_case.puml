@@ -1,0 +1,92 @@
+@startuml
+
+left to right direction
+
+:Administrador: as admin
+
+:Dentista: as dentist
+
+:Paciente: as patient
+
+:Usuario no identificado: as A
+
+
+rectangle Dentalium {
+
+    usecase UC1 as "UC_1.-Gestionar tratamientos"
+    usecase UC1.1 as "UC_1.1.-Añadir tratamiento"
+    usecase UC1.2 as "UC_1.2.-Desactivar tratamiento"
+
+    usecase UC2 as "UC_2.-Gestionar usuarios
+                --
+                Cambiar asignación de dentista
+                Solicitar nueva contraseña"
+    usecase UC12 as "UC_12.-Cambiar asignación de dentista"
+    usecase UC11 as "UC_11.-Solicitar nueva contraseña"
+
+
+    usecase UC3 as "UC_3.-Gestionar citas
+        --
+        Extensions points
+        Emitir certificados
+        Modificar el estado de la cita"
+
+
+    usecase UC4 as "UC_4.-Gestionar estudios médicos"
+    usecase UC4.1 as "UC_4.1.-Añadir estudio médico"
+    usecase UC4.2 as "UC_4.2.-Eliminar estudio médico"
+
+    usecase UC5 as "UC_5.-Gestionar presupuestos
+            --
+            Extensions points
+            Imprimir presupuestos"
+    usecase UC5.1 as "UC_5.1.-Crear nuevo presupuesto"
+    usecase UC5.2 as "UC_5.2.-Añadir tratamiento al presupuesto"
+    usecase UC5.3 as "UC_5.3.-Eliminar tratamiento del presupuesto"
+    usecase UC5.4 as "UC_5.4.-Eliminar presupuesto"
+    usecase UC8 as "UC_8.-Visualizar presupuestos"
+    usecase UC10 as "UC_10.-Imprimir presupuestos"
+
+
+    usecase UC6 as "UC_6.-Visualizar citas"
+    usecase UC9 as "UC_9.-Emitir certificados"
+
+    usecase UC7 as "UC_7.-Visualizar estudios médicos"
+
+    usecase UC13 as "UC_13.- Modificar el estado de la cita"
+    (UC2) <..down- (UC11) : <<extends>>
+    (UC1) -down..> (UC1.1) : <<include>>
+    (UC1) -down..> (UC1.2) : <<include>>
+
+    (UC3) <..down- (UC9) : <<extends>>
+    (UC3) -down..> (UC6) : <<include>>
+    (UC4) -down..> (UC7) : <<include>>
+    (UC4) -down..> (UC4.1) : <<include>>
+    (UC4) -down..> (UC4.2) : <<include>>
+
+    (UC5) -down..> (UC8) : <<include>>
+    (UC5) -down..> (UC5.1) : <<include>>
+    (UC5) -down..> (UC5.2) : <<include>>
+    (UC5) -down..> (UC5.3) : <<include>>
+    (UC5) -down..> (UC5.4) : <<include>>
+
+    (UC5) <..down- (UC10) : <<extends>>
+    (UC2) <..down- (UC12) : <<extends>>
+    (UC3) <..down- (UC13) : <<extends>>
+
+    admin -- (UC1)
+    admin -- (UC2)
+    dentist -- (UC3)
+    dentist -- (UC4)
+    dentist -- (UC5)
+    patient -- (UC6)
+    patient -- (UC7)
+    patient -- (UC8)
+    patient -- (UC9)
+    patient -- (UC10)
+    patient -- (UC13)
+
+}
+
+
+@enduml
