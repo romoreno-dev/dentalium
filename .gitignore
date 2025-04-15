@@ -1,10 +1,13 @@
 data/mysql
+target
 
 # Evitar subir datos privados
 certificate.p12
 environment.env
-manual_desployment.txt
-.dcm
+manual_deployment.txt
+script.txt
+docker-compose-private.yml
+*.dcm
 
 ### Angular ###
 dist/
