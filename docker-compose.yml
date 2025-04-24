@@ -41,6 +41,7 @@ services:
       - dentalius
     volumes:
       - ./documents:/app/documents/
+    restart: on-failure
     depends_on:
       - mysql
 

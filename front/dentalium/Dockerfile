@@ -6,6 +6,7 @@ WORKDIR /app
 # Se copian las dependencias que necesita la aplicacion
 COPY package.json package-lock.json ./
 # Se instalan las dependencias de Node.js
+RUN npm install -g @angular/cli
 RUN npm install
 # Se copia el codigo fuente del directorio raiz al directorio de trabajo
 COPY . .
