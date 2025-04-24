@@ -1,5 +1,6 @@
 data/mysql
 target
+cositas
 
 # Evitar subir datos privados
 certificate.p12
