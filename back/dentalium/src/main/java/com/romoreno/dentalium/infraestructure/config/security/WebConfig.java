@@ -30,7 +30,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins(origins.toArray(new String[0]))
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")  // Permite todos los encabezados
-                .exposedHeaders("Authorization", "X-User-Role", "X-User-Id", "Content-Disposition", "Content-Type", "Content-Length")
+                .exposedHeaders("Authorization", "X-User-Role", "X-User-Id", "Content-Disposition", "Content-Type", "Content-Length", "WWW-Authenticate")
                 .allowCredentials(true);
     }
 }
