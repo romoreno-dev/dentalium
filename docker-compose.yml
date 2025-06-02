@@ -3,11 +3,8 @@ services:
   mysql:
     image: mysql:8
     container_name: mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: dentalium
-      MYSQL_USER: roberto
-      MYSQL_PASSWORD: roberto
+    env_file:
+      docker.env
     ports:
       - "3306:3306"
     networks:
@@ -15,9 +12,10 @@ services:
     volumes:
       # Volumenes montados o vinculados:  (Con este, se enlaza a un directorio especifico del proyecto)
       - ./dentalium.sql:/docker-entrypoint-initdb.d/dentalium.sql # La primera vez que se ejecuta la imagen de mysql, se ejecuta este script
-      - ./data/mysql:/var/lib/mysql
+      #./data/mysql:/var/lib/mysql
       # Volumenes nombrados (Con este, Docker gestiona la ubicacion física y lo guarda en sus rutas internas. Solo se puede ver desde el volumen de Docker)
-      #- mysql_data:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
+    restart: always
 
   # Contenedor del backend
   backend:
@@ -27,16 +25,8 @@ services:
     container_name: dentalium-backend
     ports:
       - "8080:8080"
-    environment:
-      - DB_URL=jdbc:mysql://mysql:3306/dentalium
-      - DB_USER=root
-      - DB_PASSWORD=root
-      - CERTIFICATE_PASSWORD=
-      - JWT_SECRET=
-      - MAIL_USERNAME=dentalium.adm@gmail.com
-      - MAIL_PASSWORD=
-      - FRONTEND_URL=http://localhost
-      - FRONTEND_URL_2=http://localhost
+    env_file:
+      docker.env
     networks:
       - dentalius
     volumes:
@@ -64,5 +54,5 @@ networks:
   # Se declara la red que conecta ambos contenedores. Por defecto es bridge, permite acceso desde la misma red ademas de localhost
   dentalius:
 
-#volumes:
-# mysql_data:
+volumes:
+  mysql_data:

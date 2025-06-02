@@ -71,6 +71,7 @@ public class PdfITextSignerImpl implements Signer {
             return documentOutputStream.toByteArray();
 
         } catch (Exception e) {
+            e.printStackTrace();
             return document;
         }
     }

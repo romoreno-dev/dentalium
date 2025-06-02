@@ -44,7 +44,6 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(basic -> basic.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .addFilterAfter(jwtFilter, BasicAuthenticationFilter.class)
-                .formLogin(AbstractHttpConfigurer::disable)
                 .build();
     }
 

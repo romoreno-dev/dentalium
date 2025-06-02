@@ -1,6 +1,4 @@
-// environment.ts
 export const environment = {
-//   apiUrl: '/api'
-    apiUrl: 'http://localhost:8080/dentalium/api'
+    apiUrl: 'http://217.154.7.139:8080/dentalium/api'
 };
 

@@ -1,0 +1,54 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v3
+
+      - name: Iniciar SSH Agent con la SSH Key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Test SSH connection
+        run: ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo 'SSH connection successful'"
+
+      - name: Sync project to VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "mkdir -p apps/dentalium"
+          rsync -avz --exclude 'target/' --exclude '.git/' -e "ssh -o StrictHostKeyChecking=no" ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:apps/dentalium
+
+      - name: Deploy containers on VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          cd apps/dentalium
+          cp ../../certificate/certificate.p12 documents
+          cp "../../certificate/1744384568993_I1000000 (4).dcm" documents/medical_studies/99999999A/
+
+          cat > docker.env <<EOL
+          DB_URL=${{ secrets.DB_URL }}
+          DB_USER=${{ secrets.DB_USER }}
+          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          MYSQL_ROOT_PASSWORD=${{ secrets.DB_PASSWORD }}
+          MYSQL_DATABASE:${{ secrets.DB_DATABASE }}
+          MYSQL_USER:${{ secrets.DB_USER_NAME }}
+          MYSQL_PASSWORD:${{ secrets.DB_USER_PASSWORD }}
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}
+          MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
+          CERTIFICATE_PASSWORD=${{ secrets.CERTIFICATE_PASSWORD }}
+          FRONTEND_URL=http://217.154.7.139
+          FRONTEND_URL_2=http://217.154.7.139
+          EOL
+
+          docker compose down
+          docker compose up -d --build
+          EOF
