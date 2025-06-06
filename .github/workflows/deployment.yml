@@ -45,8 +45,8 @@ jobs:
           MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}
           MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
           CERTIFICATE_PASSWORD=${{ secrets.CERTIFICATE_PASSWORD }}
-          FRONTEND_URL=http://217.154.7.139
-          FRONTEND_URL_2=http://217.154.7.139
+          FRONTEND_URL=${{ secrets.FRONTEND_URL }}
+          FRONTEND_URL_2=${{ secrets.FRONTEND_URL_2 }}
           EOL
 
           docker compose down
