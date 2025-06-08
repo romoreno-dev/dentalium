@@ -5,6 +5,7 @@ services:
     container_name: mysql
     env_file:
       docker.env
+    mem_limit: 512m
     ports:
       - "3306:3306"
     networks:
@@ -15,7 +16,7 @@ services:
       #./data/mysql:/var/lib/mysql
       # Volumenes nombrados (Con este, Docker gestiona la ubicacion física y lo guarda en sus rutas internas. Solo se puede ver desde el volumen de Docker)
       - mysql_data:/var/lib/mysql
-    restart: always
+#    restart: always
 
   # Contenedor del backend
   backend:

@@ -17,4 +17,4 @@ COPY --from=build /app/target/dentalium.jar ./dentalium.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "dentalium.jar"]
+ENTRYPOINT ["java", "-Xmx400m", "-Xms256m", "-XX:+UseContainerSupport", "-jar", "dentalium.jar"]
