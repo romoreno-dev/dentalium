@@ -54,7 +54,7 @@ services:
       - backend
 
 networks:
-  # Por defecto es bridge, permite acceso desde la misma red ademas de localhost
+  # Por defecto bridge, permite acceso desde la misma red ademas de localhost
   dentalius:
   romoreno:
     external: true
