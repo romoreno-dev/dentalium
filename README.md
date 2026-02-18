@@ -1,6 +1,6 @@
 ## Dentalium, gestor de pacientes en una clínica dental
 
-### 1. Descripción
+### 1. Descripción.
 
 **Dentalium** es una aplicación web que tiene como principal objetivo ayudar en la gestión de los pacientes de una clínica dental.  
 - El profesional **odontólogo** puede acceder al historial de un paciente, citarle conforme a su agenda e incluir presupuestos y estudios médicos (tanto imágenes como pruebas diagnósticas en formato DICOM). También puede emitir justificantes de asistencia a consulta firmados electrónicamente.  
